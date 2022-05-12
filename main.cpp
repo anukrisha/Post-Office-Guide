@@ -32,11 +32,20 @@ public:
     }
 
 
-    void find_shortest_path(){
+    void find_shortest_path(int choice){
 
-        cout << " Enter source and destination \n";
         string source , destination;
-        cin >> source >> destination;
+
+        if(choice==1)
+        {
+            cout << " Enter source: ";
+            cin >> source;
+        }
+        else
+        {
+            cout << " Enter source and destination: ";
+            cin >> source >> destination;
+        }
 
         priority_queue< pair<int,string> , vector<pair<int,string>> , greater<pair<int,string>> > queue_;
         queue_.push({0, source});
@@ -66,13 +75,23 @@ public:
             }
         }
 
-        cout<<" Final distances for all nodes from source " << source <<" is :\n" ;
-        for(auto element : distance){
-            cout<<element.first<<" - "<<element.second<<endl;
-        }cout<<endl;
+        if(choice==1)
+        {
+            cout<<" Final distances for all nodes from source " << source <<" is :\n" ;
+            for(auto element : distance){
+                cout<<element.first<<" - "<<element.second<<endl;
+            }cout<<endl;
+        }
+        else
+        {
+            cout<<" Shortest distance from "<<source<<" to "<<destination<<" is :"<<endl;
+            for(auto element : distance){
+                if(element.first == destination)
+                    cout<<element.first<<" - "<<element.second<<endl;
+            }cout<<endl;
+        }
 
     }
-
 
 };
 
@@ -113,11 +132,36 @@ int main(){
     graph_1.add_neighbour("Agra","Prayagraj",6);
     graph_1.add_neighbour("Prayagraj","Goa",14);
 
+    cout<<" Welcome to the Post-Office-Guide"<<endl<<endl;
+    cout<<" City graph: "<<endl;
     graph_1.print_graph();
+    cout<<endl;
 
-    graph_1.find_shortest_path();
+    int choice, exit=1;
+
+    while(exit==1)
+    {
+        cout<<" Press 1: To find the shortest distance of a city from all other cities"<<endl;
+        cout<<" Press 2: To find the shortest ditance between two cities"<<endl;
+        cin>>choice;
+
+        switch(choice)
+        {
+            case 1:
+                graph_1.find_shortest_path(choice);
+                cout<<" To exit press 0 else press 1: ";
+                cin>>exit;
+                break;
+
+            case 2:
+                graph_1.find_shortest_path(choice);
+                cout<<" To exit press 0 else press 1: ";
+                cin>>exit;
+                break;
+        }
 
 
-
+    }
+    
     return 0;
 }
