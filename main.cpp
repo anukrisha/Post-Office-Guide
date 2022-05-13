@@ -24,9 +24,9 @@ public:
 
         for(auto element_list : graph_list ){
             string node = element_list.first;
-            cout<<node<<" -> ";
+            cout<<" "<<node<<" -> ";
             for( auto neighbours : graph_list[node] )
-                cout <<" (" << neighbours.first<<" - "<<neighbours.second << ") , ";
+                cout <<" (" << neighbours.first<<" - "<<neighbours.second << "), ";
             cout<<endl;
         }
     }
@@ -39,12 +39,15 @@ public:
         if(choice==1)
         {
             cout << " Enter source: ";
-            cin >> source;
+            cin.ignore();
+            getline(cin,source);
         }
         else
         {
             cout << " Enter source and destination: ";
-            cin >> source >> destination;
+            cin.ignore();
+            getline(cin,source);
+            getline(cin,destination);
         }
 
         priority_queue< pair<int,string> , vector<pair<int,string>> , greater<pair<int,string>> > queue_;
@@ -79,15 +82,15 @@ public:
         {
             cout<<" Final distances for all nodes from source " << source <<" is :\n" ;
             for(auto element : distance){
-                cout<<element.first<<" - "<<element.second<<endl;
+                cout<<" "<<element.first<<" - "<<element.second<<" Km "<<endl;
             }cout<<endl;
         }
         else
         {
-            cout<<" Shortest distance from "<<source<<" to "<<destination<<" is :"<<endl;
+            cout<<" Shortest distance from "<<source<<" to "<<destination<<" is :";
             for(auto element : distance){
                 if(element.first == destination)
-                    cout<<element.first<<" - "<<element.second<<endl;
+                    cout<<element.second<<" Km "<<endl;
             }cout<<endl;
         }
 
@@ -101,21 +104,11 @@ int main(){
 
     graph graph_1(10,15);
 
-
-     /*
-    for(int i = 0 ; i< graph_1.edges ; i++){
-        string city1,city2;
-        int dist;
-        cin>>city1>>city2>>dist;
-    }
-    */
-
     graph_1.add_neighbour("Aligarh","Kanpur",15);
     graph_1.add_neighbour("Aligarh","Bareilly",10);
     graph_1.add_neighbour("Aligarh","Prayagraj",5);
 
     graph_1.add_neighbour("Sector 58","Kanpur",18);
-
     graph_1.add_neighbour("Sector 58","Goa",2);
     graph_1.add_neighbour("Sector 58","Meerut",16);
 
@@ -132,8 +125,10 @@ int main(){
     graph_1.add_neighbour("Agra","Prayagraj",6);
     graph_1.add_neighbour("Prayagraj","Goa",14);
 
-    cout<<" Welcome to the Post-Office-Guide"<<endl<<endl;
-    cout<<" City graph: "<<endl;
+    cout<<" ===================================================================================== ";
+    cout<<endl<<" WELCOME TO THE POST-OFFICE-GUIDE"<<endl<<endl;
+    cout<<" One stop destination to find all the solutions a Postman needs! "<<endl<<endl;
+    cout<<" Following is the city map: "<<endl;
     graph_1.print_graph();
     cout<<endl;
 
@@ -141,19 +136,23 @@ int main(){
 
     while(exit==1)
     {
+        cout<<endl;
         cout<<" Press 1: To find the shortest distance of a city from all other cities"<<endl;
-        cout<<" Press 2: To find the shortest ditance between two cities"<<endl;
+        cout<<" Press 2: To find the shortest path to deliver letters between two cities"<<endl;
+        cout<<" Enter choice: ";
         cin>>choice;
 
         switch(choice)
         {
             case 1:
+                cout<<endl;
                 graph_1.find_shortest_path(choice);
                 cout<<" To exit press 0 else press 1: ";
                 cin>>exit;
                 break;
 
             case 2:
+                cout<<endl;
                 graph_1.find_shortest_path(choice);
                 cout<<" To exit press 0 else press 1: ";
                 cin>>exit;
