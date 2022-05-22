@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -7,13 +8,14 @@ class graph {
 public:
 
     int vertices ,edges;
+    map<string,string>parent;
+    map< string , vector<pair <string , int> > > graph_list ;
 
     graph(int v,int e){
         this->vertices = v;
         this->edges = e;
     }
 
-    map< string , vector<pair <string , int> > > graph_list ;
 
     void add_neighbour(string source, string destination , int distance){
         graph_list[source].push_back({destination,distance});
@@ -32,23 +34,8 @@ public:
     }
 
 
-    void find_shortest_path(int choice){
+    void find_shortest_path(string source,bool funCall=false){
 
-        string source , destination;
-
-        if(choice==1)
-        {
-            cout << " Enter source: ";
-            cin.ignore();
-            getline(cin,source);
-        }
-        else
-        {
-            cout << " Enter source and destination: ";
-            cin.ignore();
-            getline(cin,source);
-            getline(cin,destination);
-        }
 
         priority_queue< pair<int,string> , vector<pair<int,string>> , greater<pair<int,string>> > queue_;
         queue_.push({0, source});
@@ -59,6 +46,7 @@ public:
             distance[elements.first] = INT_MAX;
         }
         distance[source] = 0 ;
+        parent[source] = source;
         while(!queue_.empty()){
 
             auto node_pair = queue_.top();
@@ -73,28 +61,57 @@ public:
 
                 if(!visited[neighbour] && (distance[neighbour] > node_dist + neighbour_dist) ){
                     distance[neighbour] =  node_dist + neighbour_dist;
+                    parent[neighbour] = current_node;
                     queue_.push({ node_dist + neighbour_dist , neighbour});
                 }
             }
         }
 
-        if(choice==1)
-        {
-            cout<<" Final distances for all nodes from source " << source <<" is :\n" ;
-            for(auto element : distance){
-                cout<<" "<<element.first<<" - "<<element.second<<" Km "<<endl;
-            }cout<<endl;
-        }
-        else
-        {
-            cout<<" Shortest distance from "<<source<<" to "<<destination<<" is :";
-            for(auto element : distance){
-                if(element.first == destination)
-                    cout<<element.second<<" Km "<<endl;
-            }cout<<endl;
+        if(funCall){
+            cout<<" shortest path to all nodes : \n";
+            for(auto nodePair:distance){
+                cout<<nodePair.first<<" -> "<<nodePair.second<<endl;
+            }
         }
 
+
+
     }
+
+    void get_path(string source , string destination){
+        string indermediate_node = destination;
+        vector<string>path;
+
+        while(parent[indermediate_node] != indermediate_node){
+            path.push_back(indermediate_node);
+            indermediate_node = parent[indermediate_node];
+        }
+
+        path.push_back(indermediate_node);
+
+        reverse(path.begin(),path.end());
+
+        cout<<"\nrequired path :" << path.size() <<endl; ;
+
+        for(int i= 0 ;i < path.size() ;i++){
+                if(i == (path.size() - 1 ))cout<<path[i];
+                else cout<<path[i]<<" -> ";
+        }cout<<endl;
+    }
+
+    void get_path_from_two_nodes(){
+            string source,destination;
+            cout << " Enter source and destination: ";
+            cin.ignore();
+            getline(cin,source);
+            getline(cin,destination);
+            find_shortest_path(source);
+            get_path(source,destination);
+
+    }
+
+
+
 
 };
 
@@ -145,22 +162,31 @@ int main(){
         switch(choice)
         {
             case 1:
+                {
+
+                    cout<<endl;
+                    cout << " Enter source: ";
+                    string source;
+                    cin.ignore();
+                    getline(cin,source);
+                    graph_1.find_shortest_path(source,1);
+                    cout<<" To exit press 0 else press 1: ";
+                    cin>>exit;
+                    break;
+
+                }
+            case 2:
                 cout<<endl;
-                graph_1.find_shortest_path(choice);
+                graph_1.get_path_from_two_nodes();
                 cout<<" To exit press 0 else press 1: ";
                 cin>>exit;
                 break;
-
-            case 2:
-                cout<<endl;
-                graph_1.find_shortest_path(choice);
-                cout<<" To exit press 0 else press 1: ";
-                cin>>exit;
+            default:
                 break;
         }
 
 
     }
-    
+
     return 0;
 }
