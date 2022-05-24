@@ -202,31 +202,63 @@ pair <int,int> city_helper(string source,string destination)
 }
 
 
+void city_helper_inverse(int city)
+{
+    switch(city)
+    {
+        case 0:
+            cout<<"Agra";
+            break;
+        case 1:
+            cout<<"Aligarh";
+            break;
+        case 2:
+            cout<<"Bareilly";
+            break;
+        case 3:
+            cout<<"Goa";
+            break;
+        case 4:
+            cout<<"Jhansi";
+            break;
+        case 5:
+            cout<<"Kanpur";
+            break;
+        case 6:
+            cout<<"Meerut";
+            break;
+        case 7:
+            cout<<"Prayagraj";
+            break;
+        case 8:
+            cout<<"Sector 58";
+            break;
+        case 9:
+            cout<<"Sector 69";
+            break;
+
+    }
+}
+
+
 bool bfs(int rGraph[V][V], int s, int t, int parent[])
 {
-    // Create a visited array and mark all vertices as not
-    // visited
+   
     bool visited[V];
     memset(visited, 0, sizeof(visited));
 
-    // Create a queue, enqueue source vertex and mark source
-    // vertex as visited
     queue<int> q;
     q.push(s);
     visited[s] = true;
     parent[s] = -1;
 
-    // Standard BFS Loop
     while (!q.empty()) {
         int u = q.front();
         q.pop();
 
         for (int v = 0; v < V; v++) {
             if (visited[v] == false && rGraph[u][v] > 0) {
-                // If we find a connection to the sink node,
-                // then there is no point in BFS anymore We
-                // just have to set its parent and can return
-                // true
+
                 if (v == t) {
                     parent[v] = u;
                     return true;
@@ -238,12 +270,9 @@ bool bfs(int rGraph[V][V], int s, int t, int parent[])
         }
     }
 
-    // We didn't reach sink in BFS starting from source, so
-    // return false
     return false;
 }
 
-// Returns the maximum flow from s to t in the given graph
 void fordFulkerson()
 {
     string source,destination;
@@ -269,44 +298,29 @@ void fordFulkerson()
 
     int u, v;
 
-    // Create a residual graph and fill the residual graph
-    // with given capacities in the original graph as
-    // residual capacities in residual graph
     int rGraph[V]
-              [V]; // Residual graph where rGraph[i][j]
-                   // indicates residual capacity of edge
-                   // from i to j (if there is an edge. If
-                   // rGraph[i][j] is 0, then there is not)
+              [V]; 
     for (u = 0; u < V; u++)
         for (v = 0; v < V; v++)
             rGraph[u][v] = graph_3[u][v];
 
-    int parent[V]; // This array is filled by BFS and to
-                   // store path
+    int parent[V]; 
 
-    int max_flow = 0; // There is no flow initially
+    int max_flow = 0; 
 
-    // Augment the flow while there is path from source to
-    // sink
     while (bfs(rGraph, s, t, parent)) {
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
         int path_flow = INT_MAX;
         for (v = t; v != s; v = parent[v]) {
             u = parent[v];
             path_flow = min(path_flow, rGraph[u][v]);
         }
 
-        // update residual capacities of the edges and
-        // reverse edges along the path
         for (v = t; v != s; v = parent[v]) {
             u = parent[v];
             rGraph[u][v] -= path_flow;
             rGraph[v][u] += path_flow;
         }
 
-        // Add path flow to overall flow
         max_flow += path_flow;
     }
     cout<<" You can deliver maximum "<<max_flow<<" letters"<<endl<<endl;
@@ -314,6 +328,100 @@ void fordFulkerson()
     // Return the overall flow
 }
 
+
+int completed[10],n,cost=0;
+ int ary[10][10] = { {0,11,21,20,9,26,34,6,22,14},
+                        {11,0,10,19,20,15,37,5,21,25},
+                        {21,10,0,29,30,25,47,15,31,35},
+                        {20,19,29,0,24,20,18,14,2,19},
+                        {9,20,30,24,0,35,25,15,26,5},
+                        {26,15,25,20,35,0,34,20,18,39},
+                        {34,37,47,18,25,34,0,32,16,20},
+                        {6,5,15,14,15,20,32,0,16,20},
+                        {22,21,31,2,26,18,16,16,0,21},
+                        {14,25,35,19,5,39,20,20,21,0} };
+
+void takeInput()
+{
+            int i,j;
+
+            n=10;
+
+            for(i=0;i < n;i++)
+            {
+            completed[i]=0;
+            }
+
+            cout<<"\n\nThe cost list is:";
+
+            for( i=0;i < n;i++)
+            {
+            cout<<"\n";
+
+            for(j=0;j < n;j++)
+               cout<<"\t"<<ary[i][j];
+
+            }
+}
+
+int least(int c)
+{
+int i,nc=999;
+int min=999,kmin;
+
+for(i=0;i < n;i++)
+{
+if((ary[c][i]!=0)&&(completed[i]==0))
+if(ary[c][i]+ary[i][c] < min)
+{
+min=ary[i][0]+ary[c][i];
+kmin=ary[c][i];
+nc=i;
+}
+}
+
+if(min!=999)
+cost+=kmin;
+
+return nc;
+}
+
+void mincost(int city)
+{
+int i,ncity;
+
+completed[city]=1;
+
+city_helper_inverse(city);
+cout<<" ";
+ncity=least(city);
+
+if(ncity==999)
+{
+ncity=0;
+//cout<<ncity+1<<"HI";
+cost+=ary[city][ncity];
+
+return;
+}
+
+mincost(ncity);
+}
+
+void tsp()
+{
+    string source;
+    cout<<" Enter the source:";
+    cin.ignore();
+    getline(cin,source);
+    auto ans = city_helper(source,"Goa");
+    int s = ans.first;
+    takeInput();
+    cout<<"\n\nThe Path is:\n";
+    mincost(s); //passing 0 because starting vertex
+    cout<<"\n\nMinimum cost is "<<cost;
+
+}
 
 
 };
@@ -360,6 +468,7 @@ int main(){
         cout<<" Press 2: To find the shortest distance of a city from all other cities"<<endl;
         cout<<" Press 3: To find the shortest path to deliver letters between two cities"<<endl;
         cout<<" Press 4: To find the max letters you can deliver between two cities"<<endl;
+        cout<<" Press 5: To Find the Min Cost to travel all city from a city"<<endl;
         cout<<" Enter choice: ";
         cin>>choice;
 
@@ -392,6 +501,12 @@ int main(){
                 cout<<endl;
                 graph_1.fordFulkerson();
                 cout<<" To exit press 0 else press 1: ";
+                cin>>exit;
+                break;
+            case 5:
+                cout<<endl;
+                graph_1.tsp();
+                 cout<<" To exit press 0 else press 1: ";
                 cin>>exit;
                 break;
 
