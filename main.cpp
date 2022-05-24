@@ -243,7 +243,7 @@ void city_helper_inverse(int city)
 
 bool bfs(int rGraph[V][V], int s, int t, int parent[])
 {
-   
+
     bool visited[V];
     memset(visited, 0, sizeof(visited));
 
@@ -299,14 +299,14 @@ void fordFulkerson()
     int u, v;
 
     int rGraph[V]
-              [V]; 
+              [V];
     for (u = 0; u < V; u++)
         for (v = 0; v < V; v++)
             rGraph[u][v] = graph_3[u][v];
 
-    int parent[V]; 
+    int parent[V];
 
-    int max_flow = 0; 
+    int max_flow = 0;
 
     while (bfs(rGraph, s, t, parent)) {
         int path_flow = INT_MAX;
@@ -352,7 +352,7 @@ void takeInput()
             completed[i]=0;
             }
 
-            cout<<"\n\nThe cost list is:";
+            cout<<"\n\n The cost list is:";
 
             for( i=0;i < n;i++)
             {
@@ -393,13 +393,13 @@ int i,ncity;
 completed[city]=1;
 
 city_helper_inverse(city);
-cout<<" ";
+cout<<"--> ";
 ncity=least(city);
 
 if(ncity==999)
 {
-ncity=0;
-//cout<<ncity+1<<"HI";
+ncity=city;
+//city_helper_inverse(ncity);
 cost+=ary[city][ncity];
 
 return;
@@ -411,18 +411,18 @@ mincost(ncity);
 void tsp()
 {
     string source;
-    cout<<" Enter the source:";
+    cout<<" Enter the source: ";
     cin.ignore();
     getline(cin,source);
     auto ans = city_helper(source,"Goa");
     int s = ans.first;
     takeInput();
-    cout<<"\n\nThe Path is:\n";
-    mincost(s); //passing 0 because starting vertex
-    cout<<"\n\nMinimum cost is "<<cost;
+    cout<<"\n\n The Path is: ";
+    mincost(s);
+    cout<<source;
+    cout<<"\n\n Minimum cost is "<<cost<<endl<<endl;
 
 }
-
 
 };
 
@@ -468,7 +468,7 @@ int main(){
         cout<<" Press 2: To find the shortest distance of a city from all other cities"<<endl;
         cout<<" Press 3: To find the shortest path to deliver letters between two cities"<<endl;
         cout<<" Press 4: To find the max letters you can deliver between two cities"<<endl;
-        cout<<" Press 5: To Find the Min Cost to travel all city from a city"<<endl;
+        cout<<" Press 5: To Find the minimum Cost path to travel all cities from a given source city"<<endl;
         cout<<" Enter choice: ";
         cin>>choice;
 
